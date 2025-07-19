@@ -233,6 +233,109 @@
             border-radius: 2px;
         }
 
+        /* Custom Selectors Section */
+        .selectors-list {
+            margin-bottom: 10px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        .selector-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            font-size: 11px;
+            font-family: monospace;
+        }
+        
+        .selector-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .selector-text {
+            flex: 1;
+            word-break: break-all;
+        }
+        
+        .remove-selector {
+            background: #ea4335;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            padding: 2px 6px;
+            font-size: 10px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        
+        .remove-selector:hover {
+            background: #d33b2c;
+        }
+        
+        .selector-input {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .selector-field {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: monospace;
+        }
+        
+        .add-button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        .add-button:hover {
+            background: #1557b0;
+        }
+        
+        .add-button:disabled {
+            background: #dadce0;
+            cursor: not-allowed;
+        }
+        
+        .default-selectors {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .default-selectors summary {
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        
+        .default-list {
+            margin-top: 6px;
+            padding-left: 12px;
+        }
+        
+        .default-item {
+            margin: 2px 0;
+            font-family: monospace;
+        }
+        
+        .default-item .desc {
+            color: #999;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-style: italic;
+        }
+
         /* High contrast mode improvements */
         @media (prefers-contrast: high) {
             .status-icon.active {
@@ -289,6 +392,33 @@
                 <span id="confirmLabel" class="sr-only">Show confirmation dialog before opening Google Maps</span>
                 <div class="toggle-slider" aria-hidden="true"></div>
             </button>
+        </div>
+    </div>
+
+    <div class="setting-group" role="region" aria-labelledby="selectors-heading">
+        <h3 id="selectors-heading">Custom Selectors</h3>
+        <div class="setting-description">Add CSS selectors to detect maps on other websites</div>
+        
+        <div id="selectorsList" class="selectors-list">
+            <!-- Custom selectors will be populated here -->
+        </div>
+        
+        <div class="selector-input">
+            <input type="text" id="newSelectorInput" placeholder="Enter CSS selector (e.g., .map-container)" class="selector-field">
+            <button id="addSelectorBtn" class="add-button">Add</button>
+        </div>
+        
+        <div class="default-selectors">
+            <details>
+                <summary>View Default Selectors</summary>
+                <div class="default-list">
+                    <div class="default-item">#lu_map <span class="desc">Google local results map</span></div>
+                    <div class="default-item">div[data-cid] <span class="desc">Google local business with maps</span></div>
+                    <div class="default-item">.rlfl__tls <span class="desc">Google local results list</span></div>
+                    <div class="default-item">.CYJS5e.W0urI.SodP3b.ZHugbd.UivI7b <span class="desc">Large knowledge panel maps</span></div>
+                    <div class="default-item">div[role="region"][aria-label="Map"] <span class="desc">Generic map regions</span></div>
+                </div>
+            </details>
         </div>
     </div>
 

@@ -8,11 +8,12 @@ class MapNavigatorEnhancer {
         this.settings = {
             openInNewTab: true,
             showConfirmation: false,
-            buttonStyle: 'modern'
+            buttonStyle: 'modern',
+            customSelectors: []
         };
         this.queryParams = ['q', 'query', 'search', 'term', 'location', 'place'];
-        // Focus on Google Search specific selectors to reduce false positives
-        this.mapSelectors = [
+        // Default Google Search specific selectors
+        this.defaultSelectors = [
             '#lu_map',           // Google local results map
             'div[data-cid]',     // Google local business with maps
             '.rlfl__tls',        // Google local results list
@@ -49,6 +50,16 @@ class MapNavigatorEnhancer {
         } catch (error) {
             console.warn('Using default settings:', error);
         }
+    }
+
+    /**
+     * Get all selectors (default + custom)
+     */
+    getAllSelectors() {
+        const customSelectors = Array.isArray(this.settings.customSelectors) 
+            ? this.settings.customSelectors.filter(s => s && s.trim()) 
+            : [];
+        return [...this.defaultSelectors, ...customSelectors];
     }
 
     /**
@@ -173,25 +184,39 @@ class MapNavigatorEnhancer {
                 bottom: 8px;
                 right: 8px;
                 padding: 6px 8px;
-                z-index: 1001;
+                z-index: 9999;
                 pointer-events: auto;
-                opacity: 0;
+                opacity: 1;
+                font-size: 1em;
                 transition: opacity 0.3s ease;
             `;
             
-            // Ensure map element has relative positioning to contain absolute positioned button
+            // Ensure map element has relative positioning and can show overflow
             const mapStyle = window.getComputedStyle(mapElement);
             if (mapStyle.position === 'static') {
                 mapElement.style.position = 'relative';
             }
             
+            // For small maps, ensure they can show the button
+            if (mapElement.offsetHeight < 100 || mapElement.offsetWidth < 150) {
+                mapElement.style.overflow = 'visible';
+                // Position button slightly outside for very small maps
+                button.style.bottom = '-2px';
+                button.style.right = '-2px';
+            }
+            
             // Add button directly to map element
             mapElement.appendChild(button);
+            console.log(`[GMaps Link] Button added to map: ${mapElement.tagName}#${mapElement.id}`);
             
-            // Fade in the button after a short delay
-            setTimeout(() => {
-                button.style.opacity = '1';
-            }, 100);
+            // Debug: Make button more visible for small maps
+            if (mapElement.offsetHeight < 80) {
+                button.style.background = '#ff4444';
+                button.style.color = 'white';
+                button.innerHTML = '📍';
+                button.style.fontSize = '12px';
+                button.style.padding = '2px 4px';
+            }
         };
 
         // Add button immediately for debugging
@@ -216,8 +241,9 @@ class MapNavigatorEnhancer {
 
         // Find and enhance map elements (deduplicate across selectors)
         const foundElements = new Set();
+        const allSelectors = this.getAllSelectors();
         
-        this.mapSelectors.forEach(selector => {
+        allSelectors.forEach(selector => {
             try {
                 const mapElements = document.querySelectorAll(selector);
                 mapElements.forEach(element => {
@@ -259,7 +285,7 @@ class MapNavigatorEnhancer {
                                 hasNewMaps = true;
                             }
                             // Check for maps within the node
-                            const maps = node.querySelectorAll?.(this.mapSelectors.join(','));
+                            const maps = node.querySelectorAll?.(this.getAllSelectors().join(','));
                             if (maps?.length > 0) {
                                 hasNewMaps = true;
                             }

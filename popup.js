@@ -7,7 +7,8 @@ class PopupController {
         this.settings = {
             openInNewTab: true,
             showConfirmation: false,
-            buttonStyle: 'modern'
+            buttonStyle: 'modern',
+            customSelectors: []
         };
         this.init();
     }
@@ -50,6 +51,10 @@ class PopupController {
         const newTabToggle = document.getElementById('newTabToggle');
         const confirmToggle = document.getElementById('confirmToggle');
         const testButton = document.getElementById('testButton');
+        
+        // Custom selectors
+        const addSelectorBtn = document.getElementById('addSelectorBtn');
+        const newSelectorInput = document.getElementById('newSelectorInput');
 
         // Handle both click and keyboard events for toggles
         this.setupToggleEvents(newTabToggle, () => {
@@ -66,6 +71,17 @@ class PopupController {
 
         testButton.addEventListener('click', () => {
             this.testGoogleMapsIntegration();
+        });
+
+        // Custom selectors
+        addSelectorBtn.addEventListener('click', () => {
+            this.addCustomSelector();
+        });
+        
+        newSelectorInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                this.addCustomSelector();
+            }
         });
 
         // Help and feedback links
@@ -110,6 +126,76 @@ class PopupController {
 
         this.updateToggle(newTabToggle, this.settings.openInNewTab);
         this.updateToggle(confirmToggle, this.settings.showConfirmation);
+        this.updateCustomSelectorsList();
+    }
+
+    /**
+     * Add a custom selector
+     */
+    addCustomSelector() {
+        const input = document.getElementById('newSelectorInput');
+        const selector = input.value.trim();
+        
+        if (!selector) return;
+        
+        // Validate selector
+        try {
+            document.querySelector(selector);
+        } catch (e) {
+            alert('Invalid CSS selector. Please check the syntax.');
+            return;
+        }
+        
+        // Check for duplicates
+        if (this.settings.customSelectors.includes(selector)) {
+            alert('This selector already exists.');
+            return;
+        }
+        
+        this.settings.customSelectors.push(selector);
+        this.saveSettings();
+        this.updateCustomSelectorsList();
+        input.value = '';
+    }
+
+    /**
+     * Remove a custom selector
+     */
+    removeCustomSelector(selector) {
+        this.settings.customSelectors = this.settings.customSelectors.filter(s => s !== selector);
+        this.saveSettings();
+        this.updateCustomSelectorsList();
+    }
+
+    /**
+     * Update the custom selectors list display
+     */
+    updateCustomSelectorsList() {
+        const container = document.getElementById('selectorsList');
+        container.innerHTML = '';
+        
+        if (this.settings.customSelectors.length === 0) {
+            container.innerHTML = '<div class="setting-description">No custom selectors added yet.</div>';
+            return;
+        }
+        
+        this.settings.customSelectors.forEach(selector => {
+            const item = document.createElement('div');
+            item.className = 'selector-item';
+            item.innerHTML = `
+                <span class="selector-text">${selector}</span>
+                <button class="remove-selector" data-selector="${selector}">Remove</button>
+            `;
+            container.appendChild(item);
+        });
+        
+        // Add event listeners for remove buttons
+        container.querySelectorAll('.remove-selector').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const selector = e.target.getAttribute('data-selector');
+                this.removeCustomSelector(selector);
+            });
+        });
     }
 
     /**
