@@ -48,19 +48,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Install CRX3 tool
-        run: npm install -g crx3
-
-      - name: Create signed crx file
-        if: ${{ env.EXTENSION_PRIVATE_KEY != '' }}
-        env:
-          EXTENSION_PRIVATE_KEY: ${{ secrets.EXTENSION_PRIVATE_KEY }}
-        run: |
-          echo "${{ secrets.EXTENSION_PRIVATE_KEY }}" > private.pem
-          rm -rf ./gmaps-link.crx
-          crx3 --keyPath=private.pem --crxPath=./gmaps-link.crx .
-          rm private.pem
-
       - name: Create extension ZIP
         run: |
           zip -r gmaps-link-${{ needs.create-tag.outputs.new_version }}.zip \
@@ -95,16 +82,3 @@ jobs:
           bodyFile: CHANGES.md
           artifacts: gmaps-link-${{ needs.create-tag.outputs.new_version }}.zip
 
-      - name: Upload CRX artifact
-        if: ${{ env.EXTENSION_PRIVATE_KEY != '' }}
-        env:
-          EXTENSION_PRIVATE_KEY: ${{ secrets.EXTENSION_PRIVATE_KEY }}
-        uses: ncipollo/release-action@v1.18.0
-        with:
-          allowUpdates: true
-          omitDraftDuringUpdate: true
-          omitNameDuringUpdate: true
-          omitBodyDuringUpdate: true
-          tag: ${{ needs.create-tag.outputs.new_version }}
-          artifacts: gmaps-link-${{ needs.create-tag.outputs.new_version }}.crx
-          token: ${{ github.token }}
