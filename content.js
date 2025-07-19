@@ -30,6 +30,8 @@ class MapNavigatorEnhancer {
             '[role="img"][alt*="map"]'
         ];
         this.processedElements = new WeakSet();
+        this.isProcessing = false;
+        this.enhanceTimeout = null;
         this.init();
     }
 
@@ -277,30 +279,49 @@ class MapNavigatorEnhancer {
      * Setup map enhancements
      */
     setupMapEnhancements() {
+        // Prevent multiple simultaneous processing
+        if (this.isProcessing) {
+            console.log('Enhancement already in progress, skipping');
+            return;
+        }
+        
+        this.isProcessing = true;
+        
         const query = this.getSearchQuery();
         if (!query) {
             console.log('No search query found, map enhancement limited');
+            this.isProcessing = false;
             return;
         }
 
         console.log('Enhancing maps with query:', query);
 
-        // Find and enhance map elements
-        let totalFound = 0;
+        // Find and enhance map elements (deduplicate across selectors)
+        const foundElements = new Set();
+        
         this.mapSelectors.forEach(selector => {
             try {
                 const mapElements = document.querySelectorAll(selector);
                 mapElements.forEach(element => {
                     if (element.offsetWidth > 50 && element.offsetHeight > 50) { // Skip tiny elements
-                        totalFound++;
-                        this.enhanceMapElement(element, query);
+                        foundElements.add(element);
                     }
                 });
             } catch (error) {
                 console.warn(`Error processing selector ${selector}:`, error);
             }
         });
+
+        // Process each unique element only once
+        foundElements.forEach(element => {
+            this.enhanceMapElement(element, query);
+        });
+        
+        const totalFound = foundElements.size;
         console.log(`GMaps Link: Enhanced ${totalFound} maps`);
+        
+        // Reset processing flag
+        this.isProcessing = false;
     }
 
     /**
@@ -328,12 +349,12 @@ class MapNavigatorEnhancer {
                 }
             });
 
-            if (hasNewMaps) {
+            if (hasNewMaps && !this.isProcessing) {
                 // Debounce to avoid excessive processing
                 clearTimeout(this.enhanceTimeout);
                 this.enhanceTimeout = setTimeout(() => {
                     this.setupMapEnhancements();
-                }, 500);
+                }, 1000);
             }
         });
 
