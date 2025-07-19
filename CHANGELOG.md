@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [0.0.2] - 2025-07-19
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/b43cd72f6a2199636861e4e4e23c96e0f0689ae1..a49ea7898b7444015bf058bc898f1ca1b6077b5f)
+### 🚀 Features
+
+
+- Add more selectors ([c5e90ce](https://github.com/amasotti/gmaps-link/commit/c5e90cecaab99addad29e781f41b19e2e4ea1e9c))
+
+- Add possibility of adding custom selectors ([88b1f1c](https://github.com/amasotti/gmaps-link/commit/88b1f1ce64bd5b524f3d7971c0e296a9b0dea626))
+
 ## [0.0.1] - 2025-07-19
 
 [Compare with last version](https://github.com/amasotti/gmaps-link/compare/21cc5b049867b152d809bd1e146a7ec540201bc3..b43cd72f6a2199636861e4e4e23c96e0f0689ae1)
