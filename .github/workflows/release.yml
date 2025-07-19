@@ -1,0 +1,83 @@
+name: Create Release
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+permissions: write-all
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      new_version: ${{ steps.semver.outputs.next }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          patchList: 'fix, bugfix, perf, refactor, test, tests, chore, ci, build, enhancement, hotfix, security'
+          noNewCommitBehavior: 'silent'
+          branch: main
+
+      - name: Create and push tag
+        if: steps.semver.outputs.next != ''
+        run: |
+          git tag ${{ steps.semver.outputs.next }}
+          git push origin ${{ steps.semver.outputs.next }}
+
+  create-release:
+    needs: create-tag
+    runs-on: ubuntu-latest
+    if: needs.create-tag.outputs.new_version != ''
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Create extension ZIP
+        run: |
+          zip -r gmaps-link-${{ needs.create-tag.outputs.new_version }}.zip \
+            manifest.json \
+            background.js \
+            content.js \
+            popup.html \
+            popup.js \
+            styles.css \
+            README.md \
+            icons/ \
+            -x "*.DS_Store"
+
+      - name: Generate changelog
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --verbose --latest
+        env:
+          OUTPUT: CHANGES.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1.18.0
+        with:
+          allowUpdates: true
+          draft: false
+          makeLatest: true
+          tag: ${{ needs.create-tag.outputs.new_version }}
+          name: Release ${{ needs.create-tag.outputs.new_version }}
+          bodyFile: CHANGES.md
+          artifacts: gmaps-link-${{ needs.create-tag.outputs.new_version }}.zip
+          token: ${{ github.token }}
