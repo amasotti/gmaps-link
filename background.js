@@ -1,5 +1,5 @@
 /**
- * Enhanced Map Navigator - Background Script
+ * GMaps Link - Background Script
  * Handles keyboard shortcuts and extension events
  */
 
@@ -196,18 +196,18 @@ class BackgroundController {
      */
     handleInstallation(details) {
         if (details.reason === 'install') {
-            console.log('Enhanced Map Navigator installed');
+            console.log('GMaps Link installed');
             
             // Show welcome notification
             this.showNotification(
-                'Enhanced Map Navigator Installed',
+                'GMaps Link Installed',
                 'Use Ctrl+Shift+M (Cmd+Shift+M on Mac) to quickly open locations in Google Maps!'
             );
             
             // Optional: Open help page
-            // chrome.tabs.create({ url: 'https://github.com/your-repo/enhanced-map-navigator#help' });
+            // chrome.tabs.create({ url: 'https://github.com/amasotti/gmaps-link' });
         } else if (details.reason === 'update') {
-            console.log('Enhanced Map Navigator updated');
+            console.log('GMaps Link updated');
         }
     }
 }

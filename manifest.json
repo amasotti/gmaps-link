@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Google Maps Dynamic Link",
+  "name": "GMaps Link",
   "version": "0.0.1",
-  "description": "A Chrome extension to enhance Google Search results with dynamic link to Google Maps.",
+  "description": "Adds quick Google Maps links to web pages with embedded maps.",
   "permissions": [
     "activeTab",
     "storage",
@@ -22,7 +22,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Enhanced Map Navigator Settings"
+    "default_title": "GMaps Link Settings"
   },
   "icons": {
     "16": "icons/icon16.png",

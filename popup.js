@@ -1,5 +1,5 @@
 /**
- * Enhanced Map Navigator - Popup Script
+ * GMaps Link - Popup Script
  */
 
 class PopupController {
@@ -71,12 +71,7 @@ class PopupController {
         // Help and feedback links
         document.getElementById('helpLink').addEventListener('click', (e) => {
             e.preventDefault();
-            chrome.tabs.create({ url: 'https://github.com/your-repo/enhanced-map-navigator#help' });
-        });
-
-        document.getElementById('feedbackLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            chrome.tabs.create({ url: 'https://github.com/your-repo/enhanced-map-navigator/issues' });
+            chrome.tabs.create({ url: 'https://github.com/amasotti/gmaps-link' });
         });
     }
 

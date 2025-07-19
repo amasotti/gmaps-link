@@ -1,5 +1,5 @@
 /**
- * Enhanced Map Navigator - Content Script
+ * GMaps Link - Content Script
  * Enhances webpages with improved map functionality and Google Maps integration
  */
 
@@ -41,9 +41,9 @@ class MapNavigatorEnhancer {
             await this.loadSettings();
             this.setupMapEnhancements();
             this.observePageChanges();
-            console.log('Enhanced Map Navigator initialized');
+            console.log('GMaps Link initialized');
         } catch (error) {
-            console.error('Failed to initialize Enhanced Map Navigator:', error);
+            console.error('Failed to initialize GMaps Link:', error);
         }
     }
 
@@ -104,16 +104,16 @@ class MapNavigatorEnhancer {
     }
 
     /**
-     * Create a Google Maps button
+     * Create a simple Google Maps button
      */
     createGoogleMapsButton(query) {
         const button = document.createElement('button');
         button.className = 'emn-google-maps-btn';
         button.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
       </svg>
-      <span>Open in Google Maps</span>
+      <span>Open Gmaps</span>
     `;
         button.title = `Open "${query}" in Google Maps`;
         button.setAttribute('aria-label', `Open ${query} in Google Maps`);
@@ -138,57 +138,20 @@ class MapNavigatorEnhancer {
     }
 
     /**
-     * Create button container for map actions
+     * Create overlay button container
      */
     createButtonContainer(query) {
         const container = document.createElement('div');
-        container.className = 'emn-button-container';
+        container.className = 'emn-button-container emn-overlay';
         container.setAttribute('role', 'group');
         container.setAttribute('aria-label', `Map actions for ${query}`);
 
         const mapsButton = this.createGoogleMapsButton(query);
         container.appendChild(mapsButton);
 
-        // Add additional buttons
-        const directionsButton = this.createDirectionsButton(query);
-        container.appendChild(directionsButton);
-
         return container;
     }
 
-    /**
-     * Create directions button
-     */
-    createDirectionsButton(query) {
-        const button = document.createElement('button');
-        button.className = 'emn-directions-btn';
-        button.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21.71 11.29l-9-9c-.39-.39-1.02-.39-1.41 0l-9 9c-.39.39-.39 1.02 0 1.41l9 9c.39.39 1.02.39 1.41 0l9-9c.39-.39.39-1.02 0-1.41zM14 14.5V12h-4v3H8v-4c0-.55.45-1 1-1h5V7.5l3.5 3.5-3.5 3.5z"/>
-      </svg>
-      <span>Directions</span>
-    `;
-        button.title = `Get directions to "${query}"`;
-        button.setAttribute('aria-label', `Get directions to ${query}`);
-        button.setAttribute('type', 'button');
-
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.getDirections(query);
-        });
-
-        // Add keyboard support
-        button.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                e.stopPropagation();
-                this.getDirections(query);
-            }
-        });
-
-        return button;
-    }
 
     /**
      * Open Google Maps
@@ -217,115 +180,107 @@ class MapNavigatorEnhancer {
         window.open(directionsUrl, '_blank', 'noopener,noreferrer');
     }
 
-    /**
-     * Find action button containers on the page
-     */
-    findActionButtonContainers() {
-        const selectors = [
-            '.actions',
-            '.buttons',
-            '.button-group',
-            '.map-actions',
-            '.location-actions',
-            '[class*="action"]',
-            '[class*="button"]',
-            '.reviews',
-            '.directions',
-            '.contact-info',
-            '.business-actions'
-        ];
-
-        const containers = [];
-        for (const selector of selectors) {
-            const elements = document.querySelectorAll(selector);
-            containers.push(...elements);
-        }
-
-        return containers;
-    }
 
     /**
-     * Enhance a map element
+     * Enhance a map element with minimal UI
      */
     enhanceMapElement(mapElement, query) {
-        if (this.processedElements.has(mapElement)) return;
+        const mapId = this.generateMapId(mapElement);
+        if (this.processedElements.has(mapElement)) {
+            console.log(`Map already processed: ${mapId}`);
+            return;
+        }
         this.processedElements.add(mapElement);
 
-        // Add visual indicator
-        mapElement.classList.add('emn-enhanced-map');
-        mapElement.title = `Enhanced map: Click to open "${query}" in Google Maps`;
-        
-        // Add ARIA attributes
-        mapElement.setAttribute('role', 'button');
-        mapElement.setAttribute('aria-label', `Interactive map for ${query}. Click to open in Google Maps`);
-        mapElement.setAttribute('tabindex', '0');
+        console.log(`Processing map: ${mapId}`);
 
-        // Make clickable
+        // Add minimal visual indicator (just on hover)
+        mapElement.classList.add('emn-enhanced-map');
+        mapElement.title = `Click to open "${query}" in Google Maps`;
+        
+        // Make clickable but don't add intrusive ARIA (let existing map accessibility work)
         mapElement.style.cursor = 'pointer';
         
         const clickHandler = (e) => {
             // Don't interfere with existing functionality
             if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+            // Don't interfere if user is interacting with map controls
+            if (e.target.closest('[class*="control"], [class*="widget"], [role="button"]')) return;
 
             e.preventDefault();
             this.openGoogleMaps(query);
         };
         
         mapElement.addEventListener('click', clickHandler);
-        
-        // Add keyboard support
-        mapElement.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.openGoogleMaps(query);
-            }
-        });
 
-        // Try to add button container near the map
+        // Add simple button below the map (only if not already added)
         this.addButtonsNearMap(mapElement, query);
     }
 
     /**
-     * Add buttons near map element
+     * Add overlay button on top of map element
      */
     addButtonsNearMap(mapElement, query) {
-        // Look for existing action containers
-        const parent = mapElement.parentElement;
-        const actionContainers = this.findActionButtonContainers();
+        // Check if we already added a button for this map
+        const mapId = this.generateMapId(mapElement);
+        const existingButton = document.querySelector(`[data-map-id="${mapId}"]`);
+        if (existingButton) {
+            console.log('Button already exists for this map, skipping');
+            return;
+        }
 
-        // Find the closest action container
-        let targetContainer = null;
-        let minDistance = Infinity;
-
-        actionContainers.forEach(container => {
-            const distance = this.getElementDistance(mapElement, container);
-            if (distance < minDistance && distance < 500) { // Within 500px
-                minDistance = distance;
-                targetContainer = container;
-            }
-        });
-
-        if (targetContainer) {
-            // Add buttons to existing container
+        // Wait for map to load to avoid interference
+        const addButton = () => {
+            // Create button container with unique identifier
             const buttonContainer = this.createButtonContainer(query);
-            buttonContainer.style.display = 'inline-flex';
-            buttonContainer.style.marginLeft = '10px';
-            targetContainer.appendChild(buttonContainer);
+            buttonContainer.setAttribute('data-map-id', mapId);
+            
+            // Position button as overlay in bottom-right corner of map
+            buttonContainer.style.cssText = `
+                position: absolute;
+                bottom: 8px;
+                right: 8px;
+                z-index: 1001;
+                pointer-events: auto;
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 4px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                backdrop-filter: blur(4px);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            // Ensure map element has relative positioning to contain absolute positioned button
+            const mapStyle = window.getComputedStyle(mapElement);
+            if (mapStyle.position === 'static') {
+                mapElement.style.position = 'relative';
+            }
+            
+            // Add button directly to map element
+            mapElement.appendChild(buttonContainer);
+            
+            // Fade in the button after a short delay
+            setTimeout(() => {
+                buttonContainer.style.opacity = '1';
+            }, 100);
+        };
+
+        // Delay button creation to not interfere with map loading
+        if (mapElement.complete === false || mapElement.tagName === 'IMG') {
+            // For images, wait for load event
+            if (mapElement.tagName === 'IMG') {
+                if (mapElement.complete) {
+                    setTimeout(addButton, 500);
+                } else {
+                    mapElement.addEventListener('load', () => {
+                        setTimeout(addButton, 200);
+                    }, { once: true });
+                }
+            } else {
+                setTimeout(addButton, 1000);
+            }
         } else {
-            // Create new container near the map
-            const buttonContainer = this.createButtonContainer(query);
-            buttonContainer.style.position = 'absolute';
-            buttonContainer.style.top = '10px';
-            buttonContainer.style.right = '10px';
-            buttonContainer.style.zIndex = '1000';
-
-            // Make parent relative if needed
-            const computedStyle = window.getComputedStyle(parent);
-            if (computedStyle.position === 'static') {
-                parent.style.position = 'relative';
-            }
-
-            parent.appendChild(buttonContainer);
+            setTimeout(addButton, 200);
         }
     }
 
@@ -412,22 +367,42 @@ class MapNavigatorEnhancer {
     }
 
     /**
+     * Generate unique ID for a map element
+     */
+    generateMapId(element) {
+        const id = element.id || '';
+        const className = element.className || '';
+        const tagName = element.tagName || '';
+        const rect = element.getBoundingClientRect();
+        
+        // Create a unique identifier based on element properties
+        return `map-${tagName}-${id}-${className.replace(/\s+/g, '-')}-${Math.round(rect.top)}-${Math.round(rect.left)}`
+            .replace(/[^a-zA-Z0-9-]/g, '')
+            .substring(0, 50);
+    }
+
+    /**
      * Check if element is likely a map
      */
     isMapElement(element) {
-        const id = element.id?.toLowerCase() || '';
-        const className = element.className?.toLowerCase() || '';
-        const tagName = element.tagName?.toLowerCase() || '';
+        try {
+            const id = element.id?.toLowerCase() || '';
+            const className = element.className?.toString().toLowerCase() || '';
+            const tagName = element.tagName?.toLowerCase() || '';
 
-        return (
-            id.includes('map') ||
-            className.includes('map') ||
-            element.hasAttribute('data-map') ||
-            (tagName === 'iframe' && (
-                element.src?.includes('maps.google.com') ||
-                element.src?.includes('openstreetmap')
-            ))
-        );
+            return (
+                id.includes('map') ||
+                className.includes('map') ||
+                element.hasAttribute('data-map') ||
+                (tagName === 'iframe' && (
+                    element.src?.includes('maps.google.com') ||
+                    element.src?.includes('openstreetmap')
+                ))
+            );
+        } catch (error) {
+            console.warn('Error checking map element:', error);
+            return false;
+        }
     }
 }
 
