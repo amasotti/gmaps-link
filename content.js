@@ -11,23 +11,11 @@ class MapNavigatorEnhancer {
             buttonStyle: 'modern'
         };
         this.queryParams = ['q', 'query', 'search', 'term', 'location', 'place'];
+        // Focus on Google Search specific selectors to reduce false positives
         this.mapSelectors = [
-            // Generic map selectors
-            '[id*="map"]',
-            '[class*="map"]',
-            '[data-map]',
-            'iframe[src*="maps.google.com"]',
-            'iframe[src*="openstreetmap"]',
-            // Specific selectors for common sites
-            '#lu_map',
-            '#dimg_1',
-            '.map-container',
-            '.map-wrapper',
-            '.location-map',
-            // Business listing selectors
-            '[data-testid*="map"]',
-            '[aria-label*="map"]',
-            '[role="img"][alt*="map"]'
+            '#lu_map',           // Google local results map
+            'div[data-cid]',     // Google local business with maps
+            '.rlfl__tls'         // Google local results list
         ];
         this.processedElements = new WeakSet();
         this.isProcessing = false;
@@ -43,7 +31,7 @@ class MapNavigatorEnhancer {
             await this.loadSettings();
             this.setupMapEnhancements();
             this.observePageChanges();
-            console.log('GMaps Link initialized');
+            console.log('[GMaps Link] Extension initialized');
         } catch (error) {
             console.error('Failed to initialize GMaps Link:', error);
         }
@@ -62,39 +50,20 @@ class MapNavigatorEnhancer {
     }
 
     /**
-     * Extract search query from various sources
+     * Extract search query - prioritize URL params, fallback to page title
      */
     getSearchQuery() {
         const url = new URL(window.location.href);
 
-        // Try URL parameters
+        // Check URL parameters (most reliable)
         for (const param of this.queryParams) {
             const value = url.searchParams.get(param);
-            if (value) return value;
+            if (value?.trim()) return value.trim();
         }
 
-        // Try page title
-        const title = document.title;
-        if (title && title.length > 3) {
-            return title;
-        }
-
-        // Try meta description
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if (metaDesc?.content) {
-            return metaDesc.content;
-        }
-
-        // Try to extract from page content
-        const headings = document.querySelectorAll('h1, h2, h3');
-        for (const heading of headings) {
-            const text = heading.textContent?.trim();
-            if (text && text.length > 3 && text.length < 100) {
-                return text;
-            }
-        }
-
-        return null;
+        // Fallback to page title
+        const title = document.title.trim();
+        return title.length > 3 ? title : null;
     }
 
     /**
@@ -140,14 +109,6 @@ class MapNavigatorEnhancer {
     }
 
     /**
-     * Create Google Maps button (no wrapper needed)
-     */
-    createMapButton(query) {
-        return this.createGoogleMapsButton(query);
-    }
-
-
-    /**
      * Open Google Maps
      */
     async openGoogleMaps(query) {
@@ -165,14 +126,6 @@ class MapNavigatorEnhancer {
         }
     }
 
-    /**
-     * Get directions to location
-     */
-    getDirections(query) {
-        const encodedQuery = encodeURIComponent(query);
-        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedQuery}`;
-        window.open(directionsUrl, '_blank', 'noopener,noreferrer');
-    }
 
 
     /**
@@ -181,13 +134,10 @@ class MapNavigatorEnhancer {
     enhanceMapElement(mapElement, query) {
         // Check if this element was already enhanced
         if (this.processedElements.has(mapElement) || mapElement.hasAttribute('data-gmaps-enhanced')) {
-            console.log('Map already processed');
             return;
         }
         this.processedElements.add(mapElement);
         mapElement.setAttribute('data-gmaps-enhanced', 'true');
-
-        console.log('Processing map element');
 
         // Add minimal visual indicator (just on hover)
         mapElement.classList.add('emn-enhanced-map');
@@ -219,18 +169,16 @@ class MapNavigatorEnhancer {
         // Element is already marked as enhanced in enhanceMapElement
         // This is just for button creation
 
-        // Wait for map to load to avoid interference
+        // Create and position button
         const addButton = () => {
-            console.log('Creating button for map element');
-            
-            // Create button
-            const button = this.createMapButton(query);
+            const button = this.createGoogleMapsButton(query);
             
             // Position button as overlay in bottom-right corner of map
             button.style.cssText = `
                 position: absolute;
                 bottom: 8px;
                 right: 8px;
+                padding: 6px 8px;
                 z-index: 1001;
                 pointer-events: auto;
                 opacity: 0;
@@ -256,41 +204,21 @@ class MapNavigatorEnhancer {
         addButton();
     }
 
-    /**
-     * Get distance between two elements
-     */
-    getElementDistance(el1, el2) {
-        const rect1 = el1.getBoundingClientRect();
-        const rect2 = el2.getBoundingClientRect();
-
-        const centerX1 = rect1.left + rect1.width / 2;
-        const centerY1 = rect1.top + rect1.height / 2;
-        const centerX2 = rect2.left + rect2.width / 2;
-        const centerY2 = rect2.top + rect2.height / 2;
-
-        return Math.sqrt(Math.pow(centerX2 - centerX1, 2) + Math.pow(centerY2 - centerY1, 2));
-    }
 
     /**
      * Setup map enhancements
      */
     setupMapEnhancements() {
         // Prevent multiple simultaneous processing
-        if (this.isProcessing) {
-            console.log('Enhancement already in progress, skipping');
-            return;
-        }
+        if (this.isProcessing) return;
         
         this.isProcessing = true;
         
         const query = this.getSearchQuery();
         if (!query) {
-            console.log('No search query found, map enhancement limited');
             this.isProcessing = false;
             return;
         }
-
-        console.log('Enhancing maps with query:', query);
 
         // Find and enhance map elements (deduplicate across selectors)
         const foundElements = new Set();
@@ -313,8 +241,9 @@ class MapNavigatorEnhancer {
             this.enhanceMapElement(element, query);
         });
         
-        const totalFound = foundElements.size;
-        console.log(`GMaps Link: Enhanced ${totalFound} maps`);
+        if (foundElements.size > 0) {
+            console.log(`[GMaps Link] Enhanced ${foundElements.size} map(s) for: "${query}"`);
+        }
         
         // Reset processing flag
         this.isProcessing = false;

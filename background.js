@@ -43,17 +43,9 @@ class BackgroundController {
                 return;
             }
 
-            switch (command) {
-                case 'open-maps':
-                    await this.openGoogleMaps(query);
-                    this.showNotification('Opening Google Maps', `Searching for: ${query}`);
-                    break;
-                case 'get-directions':
-                    await this.getDirections(query);
-                    this.showNotification('Getting Directions', `Directions to: ${query}`);
-                    break;
-                default:
-                    console.log('Unknown command:', command);
+            if (command === 'open-maps') {
+                await this.openGoogleMaps(query);
+                this.showNotification('Opening Google Maps', `Searching for: ${query}`);
             }
         } catch (error) {
             console.error('Error handling command:', error);
@@ -145,14 +137,6 @@ class BackgroundController {
         }
     }
 
-    /**
-     * Get directions to location
-     */
-    async getDirections(query) {
-        const encodedQuery = encodeURIComponent(query);
-        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedQuery}`;
-        await chrome.tabs.create({ url: directionsUrl });
-    }
 
     /**
      * Get user settings

@@ -42,17 +42,10 @@
   "commands": {
     "open-maps": {
       "suggested_key": {
-        "default": "Ctrl+Shift+M",
-        "mac": "Command+Shift+M"
+        "default": "Ctrl+Shift+G",
+        "mac": "Command+Shift+G"
       },
       "description": "Open current location in Google Maps"
-    },
-    "get-directions": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+D",
-        "mac": "Command+Shift+D"
-      },
-      "description": "Get directions to current location"
     }
   }
 }
