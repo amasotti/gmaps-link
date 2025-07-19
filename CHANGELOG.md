@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [0.0.1] - 2025-07-19
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/21cc5b049867b152d809bd1e146a7ec540201bc3..b43cd72f6a2199636861e4e4e23c96e0f0689ae1)
+### ⚙️ Miscellaneous Tasks
+
+
+- Simplifications ([0194dbf](https://github.com/amasotti/gmaps-link/commit/0194dbf1bc2c22436ea4ce325289b26cad5a5d85))
+
+- Small improvements ([d7c20e3](https://github.com/amasotti/gmaps-link/commit/d7c20e3d1376ac70b6acc1d01c7e50cf1e7de4df))
+
+- Remove console logs ([29dbd90](https://github.com/amasotti/gmaps-link/commit/29dbd904bf9231f68a187204d9efb2d9d1abd53b))
+
+- Remove keyboard shortcuts ([b43cd72](https://github.com/amasotti/gmaps-link/commit/b43cd72f6a2199636861e4e4e23c96e0f0689ae1))
+
+## [0.0.1-alpha-rc2] - 2025-07-19
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/3763a22e3cc9cdc23ceb1358030a872b601f4891..21cc5b049867b152d809bd1e146a7ec540201bc3)
+### 🚜 Refactor
+
+
+- Simplify code ([21cc5b0](https://github.com/amasotti/gmaps-link/commit/21cc5b049867b152d809bd1e146a7ec540201bc3))
+
 ## [0.0.1-alpha-rc1] - 2025-07-19
 
 ### 🚀 Features

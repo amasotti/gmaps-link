@@ -15,7 +15,9 @@ class MapNavigatorEnhancer {
         this.mapSelectors = [
             '#lu_map',           // Google local results map
             'div[data-cid]',     // Google local business with maps
-            '.rlfl__tls'         // Google local results list
+            '.rlfl__tls',        // Google local results list
+            '.CYJS5e.W0urI.SodP3b.ZHugbd.UivI7b',  // Large knowledge panel maps (popular locations)
+            'div[role="region"][aria-label="Map"]'  // Generic map regions in knowledge panels
         ];
         this.processedElements = new WeakSet();
         this.isProcessing = false;
