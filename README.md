@@ -1,4 +1,5 @@
 # GMaps Link
+[![Create Release](https://github.com/amasotti/gmaps-link/actions/workflows/release.yml/badge.svg)](https://github.com/amasotti/gmaps-link/actions/workflows/release.yml)
 
 *Enhanced version based on [gsearch-gmaps-link](https://github.com/rhozacc/gsearch-gmaps-link) by rhozacc*
 
