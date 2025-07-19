@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GMaps Link",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Adds quick Google Maps links to web pages with embedded maps.",
   "permissions": [
     "activeTab",
