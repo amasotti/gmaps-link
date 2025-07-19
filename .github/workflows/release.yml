@@ -57,12 +57,9 @@ jobs:
           EXTENSION_PRIVATE_KEY: ${{ secrets.EXTENSION_PRIVATE_KEY }}
         run: |
           echo "${{ secrets.EXTENSION_PRIVATE_KEY }}" > private.pem
-          crx3 pack \
-            --private-key private.pem \
-            --output gmaps-link-${{ needs.create-tag.outputs.new_version }}.crx \
-            .
+          rm -rf ./gmaps-link.crx
+          crx3 --keyPath=private.pem --crxPath=./gmaps-link.crx .
           rm private.pem
-          
 
       - name: Create extension ZIP
         run: |

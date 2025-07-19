@@ -5,8 +5,7 @@
 
 set -e
 
-#PATH_KEY="where-is-the-key/key.pem"
-PATH_KEY="dev-keys/key.pem"
+PATH_KEY="path-to-private-key"
 
 # Get version from manifest.json if not provided
 if [ -z "$1" ]; then
