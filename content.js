@@ -138,18 +138,10 @@ class MapNavigatorEnhancer {
     }
 
     /**
-     * Create overlay button container
+     * Create Google Maps button (no wrapper needed)
      */
-    createButtonContainer(query) {
-        const container = document.createElement('div');
-        container.className = 'emn-button-container emn-overlay';
-        container.setAttribute('role', 'group');
-        container.setAttribute('aria-label', `Map actions for ${query}`);
-
-        const mapsButton = this.createGoogleMapsButton(query);
-        container.appendChild(mapsButton);
-
-        return container;
+    createMapButton(query) {
+        return this.createGoogleMapsButton(query);
     }
 
 
@@ -185,14 +177,13 @@ class MapNavigatorEnhancer {
      * Enhance a map element with minimal UI
      */
     enhanceMapElement(mapElement, query) {
-        const mapId = this.generateMapId(mapElement);
         if (this.processedElements.has(mapElement)) {
-            console.log(`Map already processed: ${mapId}`);
+            console.log('Map already processed');
             return;
         }
         this.processedElements.add(mapElement);
 
-        console.log(`Processing map: ${mapId}`);
+        console.log('Processing map element');
 
         // Add minimal visual indicator (just on hover)
         mapElement.classList.add('emn-enhanced-map');
@@ -221,31 +212,29 @@ class MapNavigatorEnhancer {
      * Add overlay button on top of map element
      */
     addButtonsNearMap(mapElement, query) {
-        // Check if we already added a button for this map
-        const mapId = this.generateMapId(mapElement);
-        const existingButton = document.querySelector(`[data-map-id="${mapId}"]`);
-        if (existingButton) {
-            console.log('Button already exists for this map, skipping');
+        // Check if this map already has been processed
+        if (mapElement.hasAttribute('data-gmaps-enhanced')) {
+            console.log('Map already enhanced, skipping');
             return;
         }
+        
+        // Mark map as being processed
+        mapElement.setAttribute('data-gmaps-enhanced', 'true');
 
         // Wait for map to load to avoid interference
         const addButton = () => {
-            // Create button container with unique identifier
-            const buttonContainer = this.createButtonContainer(query);
-            buttonContainer.setAttribute('data-map-id', mapId);
+            console.log('Creating button for map element');
+            
+            // Create button
+            const button = this.createMapButton(query);
             
             // Position button as overlay in bottom-right corner of map
-            buttonContainer.style.cssText = `
+            button.style.cssText = `
                 position: absolute;
                 bottom: 8px;
                 right: 8px;
                 z-index: 1001;
                 pointer-events: auto;
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 4px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                backdrop-filter: blur(4px);
                 opacity: 0;
                 transition: opacity 0.3s ease;
             `;
@@ -257,31 +246,16 @@ class MapNavigatorEnhancer {
             }
             
             // Add button directly to map element
-            mapElement.appendChild(buttonContainer);
+            mapElement.appendChild(button);
             
             // Fade in the button after a short delay
             setTimeout(() => {
-                buttonContainer.style.opacity = '1';
+                button.style.opacity = '1';
             }, 100);
         };
 
-        // Delay button creation to not interfere with map loading
-        if (mapElement.complete === false || mapElement.tagName === 'IMG') {
-            // For images, wait for load event
-            if (mapElement.tagName === 'IMG') {
-                if (mapElement.complete) {
-                    setTimeout(addButton, 500);
-                } else {
-                    mapElement.addEventListener('load', () => {
-                        setTimeout(addButton, 200);
-                    }, { once: true });
-                }
-            } else {
-                setTimeout(addButton, 1000);
-            }
-        } else {
-            setTimeout(addButton, 200);
-        }
+        // Add button immediately for debugging
+        addButton();
     }
 
     /**
@@ -312,11 +286,13 @@ class MapNavigatorEnhancer {
         console.log('Enhancing maps with query:', query);
 
         // Find and enhance map elements
+        let totalFound = 0;
         this.mapSelectors.forEach(selector => {
             try {
                 const mapElements = document.querySelectorAll(selector);
                 mapElements.forEach(element => {
                     if (element.offsetWidth > 50 && element.offsetHeight > 50) { // Skip tiny elements
+                        totalFound++;
                         this.enhanceMapElement(element, query);
                     }
                 });
@@ -324,6 +300,7 @@ class MapNavigatorEnhancer {
                 console.warn(`Error processing selector ${selector}:`, error);
             }
         });
+        console.log(`GMaps Link: Enhanced ${totalFound} maps`);
     }
 
     /**
@@ -366,20 +343,6 @@ class MapNavigatorEnhancer {
         });
     }
 
-    /**
-     * Generate unique ID for a map element
-     */
-    generateMapId(element) {
-        const id = element.id || '';
-        const className = element.className || '';
-        const tagName = element.tagName || '';
-        const rect = element.getBoundingClientRect();
-        
-        // Create a unique identifier based on element properties
-        return `map-${tagName}-${id}-${className.replace(/\s+/g, '-')}-${Math.round(rect.top)}-${Math.round(rect.left)}`
-            .replace(/[^a-zA-Z0-9-]/g, '')
-            .substring(0, 50);
-    }
 
     /**
      * Check if element is likely a map
