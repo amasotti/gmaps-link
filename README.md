@@ -47,6 +47,7 @@ the choice and convenience they want.
 
 - **Open in New Tab**: Choose whether Google Maps opens in new tab or current tab
 - **Confirmation Dialog**: Optional confirmation before opening Google Maps
+- **Custom Selectors**: Add your own CSS selectors to detect maps on other websites
 
 ## Privacy
 
