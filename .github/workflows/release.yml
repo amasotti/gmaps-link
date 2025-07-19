@@ -48,6 +48,20 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Install CRX3 tool
+        run: npm install -g crx3
+
+      - name: Create signed crx file
+        if: ${{ secrets.EXTENSION_PRIVATE_KEY != '' }}
+        run: |
+          echo "${{ secrets.EXTENSION_PRIVATE_KEY }}" > private.pem
+          crx3 pack \
+            --private-key private.pem \
+            --output gmaps-link-${{ needs.create-tag.outputs.new_version }}.crx \
+            .
+          rm private.pem
+          
+
       - name: Create extension ZIP
         run: |
           zip -r gmaps-link-${{ needs.create-tag.outputs.new_version }}.zip \
@@ -58,6 +72,7 @@ jobs:
             popup.js \
             styles.css \
             README.md \
+            build-crx.sh \
             icons/ \
             -x "*.DS_Store"
 
@@ -80,4 +95,15 @@ jobs:
           name: Release ${{ needs.create-tag.outputs.new_version }}
           bodyFile: CHANGES.md
           artifacts: gmaps-link-${{ needs.create-tag.outputs.new_version }}.zip
+
+      - name: Upload CRX artifact
+        if: ${{ secrets.EXTENSION_PRIVATE_KEY != '' }}
+        uses: ncipollo/release-action@v1.18.0
+        with:
+          allowUpdates: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitBodyDuringUpdate: true
+          tag: ${{ needs.create-tag.outputs.new_version }}
+          artifacts: gmaps-link-${{ needs.create-tag.outputs.new_version }}.crx
           token: ${{ github.token }}
