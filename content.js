@@ -179,11 +179,13 @@ class MapNavigatorEnhancer {
      * Enhance a map element with minimal UI
      */
     enhanceMapElement(mapElement, query) {
-        if (this.processedElements.has(mapElement)) {
+        // Check if this element was already enhanced
+        if (this.processedElements.has(mapElement) || mapElement.hasAttribute('data-gmaps-enhanced')) {
             console.log('Map already processed');
             return;
         }
         this.processedElements.add(mapElement);
+        mapElement.setAttribute('data-gmaps-enhanced', 'true');
 
         console.log('Processing map element');
 
@@ -214,14 +216,8 @@ class MapNavigatorEnhancer {
      * Add overlay button on top of map element
      */
     addButtonsNearMap(mapElement, query) {
-        // Check if this map already has been processed
-        if (mapElement.hasAttribute('data-gmaps-enhanced')) {
-            console.log('Map already enhanced, skipping');
-            return;
-        }
-        
-        // Mark map as being processed
-        mapElement.setAttribute('data-gmaps-enhanced', 'true');
+        // Element is already marked as enhanced in enhanceMapElement
+        // This is just for button creation
 
         // Wait for map to load to avoid interference
         const addButton = () => {
