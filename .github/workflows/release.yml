@@ -52,7 +52,9 @@ jobs:
         run: npm install -g crx3
 
       - name: Create signed crx file
-        if: ${{ secrets.EXTENSION_PRIVATE_KEY != '' }}
+        if: ${{ env.EXTENSION_PRIVATE_KEY != '' }}
+        env:
+          EXTENSION_PRIVATE_KEY: ${{ secrets.EXTENSION_PRIVATE_KEY }}
         run: |
           echo "${{ secrets.EXTENSION_PRIVATE_KEY }}" > private.pem
           crx3 pack \
@@ -97,7 +99,9 @@ jobs:
           artifacts: gmaps-link-${{ needs.create-tag.outputs.new_version }}.zip
 
       - name: Upload CRX artifact
-        if: ${{ secrets.EXTENSION_PRIVATE_KEY != '' }}
+        if: ${{ env.EXTENSION_PRIVATE_KEY != '' }}
+        env:
+          EXTENSION_PRIVATE_KEY: ${{ secrets.EXTENSION_PRIVATE_KEY }}
         uses: ncipollo/release-action@v1.18.0
         with:
           allowUpdates: true
