@@ -96,14 +96,6 @@ class MapNavigatorEnhancer {
             this.openGoogleMaps(query);
         });
 
-        // Add keyboard support
-        button.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                e.stopPropagation();
-                this.openGoogleMaps(query);
-            }
-        });
 
         return button;
     }

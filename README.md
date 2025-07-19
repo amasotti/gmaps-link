@@ -28,7 +28,6 @@ the choice and convenience they want.
 
 - **Google Search Maps**: Click map boxes in search results to open Google Maps (original functionality)
 - **Universal Maps**: Works on any website with embedded maps (restaurants, real estate, events, etc.)
-- **Keyboard Shortcut**: Press `Ctrl+Shift+M` (Cmd+Shift+M on Mac) to quickly open current location
 
 ## Installation
 
@@ -60,7 +59,7 @@ the choice and convenience they want.
 Based on the original [gsearch-gmaps-link](https://github.com/rhozacc/gsearch-gmaps-link)
 by [rhozacc](https://github.com/rhozacc).
 
-Enhanced with universal map detection, keyboard shortcuts, accessibility improvements, and modern Chrome extension
+Enhanced with universal map detection, accessibility improvements, and modern Chrome extension
 standards.
 
 ## License
