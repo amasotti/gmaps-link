@@ -11,7 +11,8 @@ class PopupController {
             openInNewTab: true,
             showConfirmation: false,
             buttonStyle: 'modern',
-            customSelectors: []
+            customSelectors: [],
+            enableOpenStreetMap: false
         };
         this.init();
     }
@@ -53,6 +54,7 @@ class PopupController {
         // Toggle switches
         const newTabToggle = document.getElementById('newTabToggle');
         const confirmToggle = document.getElementById('confirmToggle');
+        const osmToggle = document.getElementById('osmToggle');
         const testButton = document.getElementById('testButton');
         
         // Custom selectors
@@ -69,6 +71,12 @@ class PopupController {
         this.setupToggleEvents(confirmToggle, () => {
             this.settings.showConfirmation = !this.settings.showConfirmation;
             this.updateToggle(confirmToggle, this.settings.showConfirmation);
+            this.saveSettings();
+        });
+
+        this.setupToggleEvents(osmToggle, () => {
+            this.settings.enableOpenStreetMap = !this.settings.enableOpenStreetMap;
+            this.updateToggle(osmToggle, this.settings.enableOpenStreetMap);
             this.saveSettings();
         });
 
@@ -127,9 +135,11 @@ class PopupController {
     updateUI() {
         const newTabToggle = document.getElementById('newTabToggle');
         const confirmToggle = document.getElementById('confirmToggle');
+        const osmToggle = document.getElementById('osmToggle');
 
         this.updateToggle(newTabToggle, this.settings.openInNewTab);
         this.updateToggle(confirmToggle, this.settings.showConfirmation);
+        this.updateToggle(osmToggle, this.settings.enableOpenStreetMap);
         this.updateCustomSelectorsList();
     }
 

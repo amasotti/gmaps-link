@@ -9,7 +9,8 @@ class MapNavigatorEnhancer {
             openInNewTab: true,
             showConfirmation: false,
             buttonStyle: 'modern',
-            customSelectors: []
+            customSelectors: [],
+            enableOpenStreetMap: false
         };
         this.queryParams = ['q', 'query', 'search', 'term', 'location', 'place'];
         // Default Google Search specific selectors
@@ -88,6 +89,14 @@ class MapNavigatorEnhancer {
     }
 
     /**
+     * Generate OpenStreetMap URL
+     */
+    generateOpenStreetMapUrl(query) {
+        const encodedQuery = encodeURIComponent(query);
+        return `https://www.openstreetmap.org/search?query=${encodedQuery}`;
+    }
+
+    /**
      * Create a simple Google Maps button
      */
     createGoogleMapsButton(query) {
@@ -109,6 +118,30 @@ class MapNavigatorEnhancer {
             this.openGoogleMaps(query);
         });
 
+        return button;
+    }
+
+    /**
+     * Create a simple OpenStreetMap button
+     */
+    createOpenStreetMapButton(query) {
+        const button = document.createElement('button');
+        button.className = 'emn-openstreetmap-btn';
+        button.innerHTML = `
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      </svg>
+      <span>Open OSM</span>
+    `;
+        button.title = `Open "${query}" in OpenStreetMap`;
+        button.setAttribute('aria-label', `Open ${query} in OpenStreetMap`);
+        button.setAttribute('type', 'button');
+
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.openOpenStreetMap(query);
+        });
 
         return button;
     }
@@ -123,6 +156,24 @@ class MapNavigatorEnhancer {
         }
 
         const url = this.generateGoogleMapsUrl(query);
+
+        if (this.settings.openInNewTab) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        } else {
+            window.location.href = url;
+        }
+    }
+
+    /**
+     * Open OpenStreetMap
+     */
+    async openOpenStreetMap(query) {
+        if (this.settings.showConfirmation) {
+            const confirmed = confirm(`Open "${query}" in OpenStreetMap?`);
+            if (!confirmed) return;
+        }
+
+        const url = this.generateOpenStreetMapUrl(query);
 
         if (this.settings.openInNewTab) {
             window.open(url, '_blank', 'noopener,noreferrer');
@@ -163,7 +214,7 @@ class MapNavigatorEnhancer {
         
         mapElement.addEventListener('click', clickHandler);
 
-        // Add simple button below the map (only if not already added)
+        // Add simple button(s) below the map (only if not already added)
         this.addButtonsNearMap(mapElement, query);
     }
 
@@ -176,7 +227,10 @@ class MapNavigatorEnhancer {
 
         // Create and position button
         const addButton = () => {
-            const button = this.createGoogleMapsButton(query);
+            // Use OpenStreetMap if enabled, otherwise Google Maps
+            const button = this.settings.enableOpenStreetMap 
+                ? this.createOpenStreetMapButton(query)
+                : this.createGoogleMapsButton(query);
             
             // Position button as overlay in bottom-right corner of map
             button.style.cssText = `
@@ -207,16 +261,18 @@ class MapNavigatorEnhancer {
             
             // Add button directly to map element
             mapElement.appendChild(button);
-            console.log(`[GMaps Link] Button added to map: ${mapElement.tagName}#${mapElement.id}`);
             
             // Debug: Make button more visible for small maps
             if (mapElement.offsetHeight < 80) {
-                button.style.background = '#ff4444';
+                button.style.background = this.settings.enableOpenStreetMap ? '#44ff44' : '#ff4444';
                 button.style.color = 'white';
-                button.innerHTML = '📍';
+                button.innerHTML = this.settings.enableOpenStreetMap ? '🗺️' : '📍';
                 button.style.fontSize = '12px';
                 button.style.padding = '2px 4px';
             }
+            
+            const mapType = this.settings.enableOpenStreetMap ? 'OpenStreetMap' : 'Google Maps';
+            console.log(`[GMaps Link] ${mapType} button added to map: ${mapElement.tagName}#${mapElement.id}`);
         };
 
         // Add button immediately for debugging
