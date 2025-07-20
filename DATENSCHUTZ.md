@@ -47,16 +47,6 @@ um den Benutzer über den Status der Kartenerkennung zu informieren.
 **English:** Display of optional notifications for errors or important status messages. Only used to inform users about
 map detection status.
 
-### `host_permissions` ("https://*/*", "http://*/*")
-
-**Deutsch:** Zugriff auf alle Webseiten, um Karten universell zu erkennen. Da Karten auf verschiedensten Webseiten
-eingebettet sein können (Restaurants, Immobilien, Events, etc.), ist dieser umfassende Zugriff notwendig, um die
-Funktionalität bereitzustellen. Die Erweiterung sammelt keine Daten und führt nur lokale Verarbeitung durch.
-
-**English:** Access to all websites to universally detect maps. Since maps can be embedded on various types of
-websites (restaurants, real estate, events, etc.), this comprehensive access is necessary to provide functionality. The
-extension collects no data and performs only local processing.
-
 ## 3. Datenschutz-Grundsätze
 
 - **Keine Datensammlung:** Die Erweiterung sammelt, speichert oder überträgt keine persönlichen Daten

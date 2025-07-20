@@ -44,10 +44,6 @@ Die Erweiterung speichert ausschließlich lokale Einstellungen in Ihrem Browser:
 - **Zweck:** Anzeige von Statusmeldungen
 - **Verwendung:** Nur für optionale Benutzerbenachrichtigungen
 
-#### `host_permissions`
-- **Zweck:** Universelle Kartenerkennung auf allen Webseiten
-- **Verwendung:** Ausschließlich zur Identifikation von Kartenelementen
-
 ### 6. Datenweitergabe
 Es erfolgt **keine Weitergabe** von Daten an Dritte. Die Erweiterung:
 - Sendet keine Daten an externe Server
@@ -101,10 +97,6 @@ The extension stores exclusively local settings in your browser:
 #### `notifications`
 - **Purpose:** Display of status messages
 - **Use:** Only for optional user notifications
-
-#### `host_permissions`
-- **Purpose:** Universal map detection on all websites
-- **Use:** Exclusively for identifying map elements
 
 ### 6. Data Sharing
 There is **no sharing** of data with third parties. The extension:

@@ -1,0 +1,308 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 320px;
+    min-height: 400px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+}
+
+.header {
+    background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.header p {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.content {
+    padding: 20px;
+}
+
+.setting-group {
+    margin-bottom: 20px;
+}
+
+.setting-group h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #1a73e8;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-label {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.setting-description {
+    color: #666;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.toggle-switch.active {
+    background: #4285f4;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-switch.active .toggle-slider {
+    transform: translateX(20px);
+}
+
+.footer {
+    padding: 15px 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: white;
+    text-align: center;
+}
+
+.version {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.links a {
+    font-size: 11px;
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+.test-button {
+    background: linear-gradient(135deg, #fbbc04 0%, #ea4335 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.test-button:hover {
+    background: linear-gradient(135deg, #f9ab00 0%, #d93025 100%);
+    transform: translateY(-1px);
+}
+
+.success-message {
+    background: #e8f5e8;
+    color: #2d7d2d;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-top: 8px;
+    display: none;
+}
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Improved focus styles for accessibility */
+.toggle-switch:focus {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+}
+
+.test-button:focus {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+}
+
+a:focus {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Custom Selectors Section */
+.selectors-list {
+    margin-bottom: 10px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.selector-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-family: monospace;
+}
+
+.selector-item:last-child {
+    margin-bottom: 0;
+}
+
+.selector-text {
+    flex: 1;
+    word-break: break-all;
+}
+
+.remove-selector {
+    background: #ea4335;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 2px 6px;
+    font-size: 10px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.remove-selector:hover {
+    background: #d33b2c;
+}
+
+.selector-input {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.selector-field {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: monospace;
+}
+
+.add-button {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background: #1557b0;
+}
+
+.add-button:disabled {
+    background: #dadce0;
+    cursor: not-allowed;
+}
+
+.default-selectors {
+    font-size: 11px;
+    color: #666;
+}
+
+.default-selectors summary {
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.default-list {
+    margin-top: 6px;
+    padding-left: 12px;
+}
+
+.default-item {
+    margin: 2px 0;
+    font-family: monospace;
+}
+
+.default-item .desc {
+    color: #999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-style: italic;
+}
+
+/* High contrast mode improvements */
+@media (prefers-contrast: no-preference) {
+    .status-icon.active {
+        background: #000;
+        border: 2px solid #fff;
+    }
+
+    .status-icon.inactive {
+        background: #000;
+        border: 2px solid #fff;
+    }
+
+    .toggle-switch {
+        border: 2px solid currentColor;
+    }
+}

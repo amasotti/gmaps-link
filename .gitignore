@@ -1,6 +1,7 @@
 .idea
 dev-keys
 *.zip
+*.crx
 
 # Utilities
 generate-icons.html
