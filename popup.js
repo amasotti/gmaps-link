@@ -1,5 +1,8 @@
 /**
  * GMaps Link - Popup Script
+ *
+ * The Popup is the element loaded when the user clicks on the extension icon
+ * and want to configure the extension settings.
  */
 
 class PopupController {
@@ -96,6 +99,7 @@ class PopupController {
      */
     setupToggleEvents(toggle, callback) {
         toggle.addEventListener('click', callback);
+        // Keyboard accessibility - allow toggling with Enter or Space
         toggle.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -148,7 +152,6 @@ class PopupController {
         
         // Check for duplicates
         if (this.settings.customSelectors.includes(selector)) {
-            alert('This selector already exists.');
             return;
         }
         
@@ -206,15 +209,11 @@ class PopupController {
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
             if (!tab) {
-                this.updateStatus('query', false, 'No active tab');
-                this.updateStatus('map', false, 'No active tab');
                 return;
             }
 
             // Check if we can execute scripts on this tab
             if (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') || tab.url.startsWith('edge://') || tab.url.startsWith('about:')) {
-                this.updateStatus('query', false, 'Cannot access system pages');
-                this.updateStatus('map', false, 'Cannot access system pages');
                 return;
             }
 
@@ -224,16 +223,8 @@ class PopupController {
                 func: this.checkPageContent
             });
 
-            if (results && results[0] && results[0].result) {
-                const { hasQuery, queryText, mapCount } = results[0].result;
-
-                this.updateStatus('query', hasQuery, hasQuery ? `Found: "${queryText}"` : 'No search query found');
-                this.updateStatus('map', mapCount > 0, mapCount > 0 ? `Found ${mapCount} map(s)` : 'No maps detected');
-            }
         } catch (error) {
             console.error('Error checking page status:', error);
-            this.updateStatus('query', false, 'Unable to check page');
-            this.updateStatus('map', false, 'Unable to check page');
         }
     }
 
@@ -250,7 +241,6 @@ class PopupController {
             'iframe[src*="maps.google.com"]',
             'iframe[src*="openstreetmap"]',
             '#lu_map',
-            '#dimg_1',
             '.map-container',
             '.map-wrapper',
             '.location-map'
@@ -298,27 +288,6 @@ class PopupController {
     }
 
     /**
-     * Update status indicator with ARIA support
-     */
-    updateStatus(type, isActive, text) {
-        const statusElement = document.getElementById(`${type}Status`);
-        const textElement = document.getElementById(`${type}Text`);
-
-        if (statusElement) {
-            statusElement.className = `status-icon ${isActive ? 'active' : 'inactive'}`;
-            statusElement.setAttribute('aria-label', `${type} status: ${isActive ? 'active' : 'inactive'}`);
-        }
-
-        if (textElement) {
-            textElement.textContent = text;
-            // Announce status changes to screen readers
-            if (textElement.hasAttribute('aria-live')) {
-                textElement.setAttribute('aria-live', 'polite');
-            }
-        }
-    }
-
-    /**
      * Test Google Maps integration
      */
     async testGoogleMapsIntegration() {
@@ -339,12 +308,6 @@ class PopupController {
                 const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
                 await chrome.tabs.update(tab.id, { url: mapsUrl });
             }
-
-            // Show success message
-            successMessage.style.display = 'block';
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 3000);
 
         } catch (error) {
             console.error('Test failed:', error);

@@ -1,6 +1,9 @@
 /**
  * GMaps Link - Background Script
  * Handles extension installation events
+ *
+ * This class takes care of managing the background processes of the GMaps Link extension,
+ * passing the settings to the content scripts and handling notifications.
  */
 
 class BackgroundController {
