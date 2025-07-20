@@ -21,31 +21,6 @@ class BackgroundController {
         });
     }
 
-
-
-
-    /**
-     * Get user settings
-     */
-    async getSettings() {
-        try {
-            const defaultSettings = {
-                openInNewTab: true,
-                showConfirmation: false,
-                buttonStyle: 'modern'
-            };
-            const result = await chrome.storage.sync.get(defaultSettings);
-            return { ...defaultSettings, ...result };
-        } catch (error) {
-            console.error('Error loading settings:', error);
-            return {
-                openInNewTab: true,
-                showConfirmation: false,
-                buttonStyle: 'modern'
-            };
-        }
-    }
-
     /**
      * Show notification to user
      */
