@@ -57,8 +57,10 @@ jobs:
             popup.html \
             popup.js \
             styles.css \
+            styles.popup.css \
             README.md \
             build-crx.sh \
+            LICENSE \
             icons/ \
             -x "*.DS_Store"
 
