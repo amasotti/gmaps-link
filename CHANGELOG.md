@@ -2,6 +2,77 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [0.2.0] - 2025-07-20
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/a04172487e43992517eb00f67ad79ae25b9fa20e..)
+### 🚀 Features
+
+
+- Add support OSM ([4831032](https://github.com/amasotti/gmaps-link/commit/4831032c3b39c57bd6ef402185762cb5e8e2fc6e))
+
+## [0.1.3] - 2025-07-20
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/2539da4883742d7c7b1f478d4eb1ba93b27bcac8..a04172487e43992517eb00f67ad79ae25b9fa20e)
+### ⚙️ Miscellaneous Tasks
+
+
+- Simplify css and popup html ([bf2ba30](https://github.com/amasotti/gmaps-link/commit/bf2ba3067ae5040c095bb31a1eafde026a20696d))
+
+- Simplify settings logic (popup.js) ([f6ddca7](https://github.com/amasotti/gmaps-link/commit/f6ddca742608a665269b14288c8079f7f1f5c788))
+
+- Add extracted css to zip file for local installation ([98a8b77](https://github.com/amasotti/gmaps-link/commit/98a8b775d960d4d5f2fd2a8e12dcd9ccbb49b4bc))
+
+- Clean up background.js ([a041724](https://github.com/amasotti/gmaps-link/commit/a04172487e43992517eb00f67ad79ae25b9fa20e))
+
+## [0.1.2] - 2025-07-19
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/72edc2ce4a614f39e4bf2d5e32da8333d1da6f18..2539da4883742d7c7b1f478d4eb1ba93b27bcac8)
+### 🐛 Bug Fixes
+
+
+- Remove signed artifact creation in pipeline (will do locally) ([2539da4](https://github.com/amasotti/gmaps-link/commit/2539da4883742d7c7b1f478d4eb1ba93b27bcac8))
+
+## [0.1.1] - 2025-07-19
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/20465c0cd457188b5baa4c9dd293df75b63bbfcf..72edc2ce4a614f39e4bf2d5e32da8333d1da6f18)
+### ⚙️ Miscellaneous Tasks
+
+
+- Minor adjustments ([72edc2c](https://github.com/amasotti/gmaps-link/commit/72edc2ce4a614f39e4bf2d5e32da8333d1da6f18))
+
+## [0.1.0] - 2025-07-19
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/048eefdc8c8bbd13d7ecb73d8cdc86faa9fdba16..20465c0cd457188b5baa4c9dd293df75b63bbfcf)
+### 🚀 Features
+
+
+- Add support for signing crx file ([6ddf41c](https://github.com/amasotti/gmaps-link/commit/6ddf41c574a25ae30ffe3b89f4585222f4a71470))
+
+### 🐛 Bug Fixes
+
+
+- Naming of secret var in workflow ([20465c0](https://github.com/amasotti/gmaps-link/commit/20465c0cd457188b5baa4c9dd293df75b63bbfcf))
+
+## [0.0.4] - 2025-07-19
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/dee50d67f65bb81ddc5f6473461f7cdcc199df38..048eefdc8c8bbd13d7ecb73d8cdc86faa9fdba16)
+### ⚙️ Miscellaneous Tasks
+
+
+- Add data privacy statement, update to v0.0.4 ([048eefd](https://github.com/amasotti/gmaps-link/commit/048eefdc8c8bbd13d7ecb73d8cdc86faa9fdba16))
+
+## [0.0.3] - 2025-07-19
+
+[Compare with last version](https://github.com/amasotti/gmaps-link/compare/a49ea7898b7444015bf058bc898f1ca1b6077b5f..dee50d67f65bb81ddc5f6473461f7cdcc199df38)
+### ⚙️ Miscellaneous Tasks
+
+
+- *(ci)* Add dependabot.yml and CODEOWNERS files, update CHANGELOG.md ([6a207b2](https://github.com/amasotti/gmaps-link/commit/6a207b2f4c91c4bcad312b7566d702836e8d16cf))
+
+- *(ci)* Add release wf ([e47089b](https://github.com/amasotti/gmaps-link/commit/e47089ba3ec33fb4ddf9e972c83bd42108c77b00))
+
+- Add badge ([dee50d6](https://github.com/amasotti/gmaps-link/commit/dee50d67f65bb81ddc5f6473461f7cdcc199df38))
+
 ## [0.0.2] - 2025-07-19
 
 [Compare with last version](https://github.com/amasotti/gmaps-link/compare/b43cd72f6a2199636861e4e4e23c96e0f0689ae1..a49ea7898b7444015bf058bc898f1ca1b6077b5f)
